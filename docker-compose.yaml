@@ -1,0 +1,41 @@
+version: '3.5'
+services:
+  proposta-app:
+    image: proposta-app
+    environment:
+      spring.profiles.active: prod
+    depends_on:
+      rabbit-mq:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+  analise-credito-app:
+    image: analise-credito
+    environment:
+      spring.profiles.active: prod
+    depends_on:
+      rabbit-mq:
+        condition: service_healthy
+  notificacao-app:
+    image: notificacao-app
+    environment:
+      spring.profiles.active: prod
+    depends_on:
+      rabbit-mq:
+        condition: service_healthy
+  rabbit-mq:
+    image: rabbitmq:3-management
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      timeout: 5s
+      interval: 5s
+      retries: 3
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: propostadb
