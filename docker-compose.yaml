@@ -20,6 +20,8 @@ services:
     image: notificacao-app
     environment:
       spring.profiles.active: prod
+      aws.acessKey: ${AWS_ACESS_KEY}
+      aws.secretKey: ${AWS_SECRET_KEY}
     depends_on:
       rabbit-mq:
         condition: service_healthy
